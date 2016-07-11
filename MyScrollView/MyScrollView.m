@@ -17,32 +17,39 @@
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(move:)];
     self.gestureRecognizers = @[panRecognizer];
     
-    self.contentSize = CGSizeMake(320, 750);
+    self.contentSize = CGSizeMake(50, 250);
     
     return self;
 }
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    [self.superview bringSubviewToFront:self];
-    
-    self.lastLocation = self.center;
-}
+
 
 -(void) move:(UIPanGestureRecognizer *)myPan{
-    CGPoint translation = [myPan translationInView:self.superview];
-    CGPoint realPoint = CGPointMake((translation.x + self.lastLocation.x), (translation.y + self.lastLocation.y));
     
-    
-    BOOL isTooFarRight = realPoint.x > 200;
-    BOOL isTooFarLeft = realPoint.x < 100;
-    BOOL isTooFarTop = realPoint.y > 380;
-    BOOL isTooFarDown = realPoint.y < 178;
-    
-    if (!isTooFarRight && !isTooFarLeft && !isTooFarTop && !isTooFarDown){
-        self.center = CGPointMake(realPoint.x, realPoint.y);
-        NSLog(@"Moving the location: (%f, %f)", realPoint.x, realPoint.y);
-    }else{
-        NSLog(@"NOPE x, y = (%f, %f)", realPoint.x, realPoint.y);
+    if (myPan.state == UIGestureRecognizerStateBegan) {
+        self.lastLocation = self.bounds.origin;
+    } else {
+        
+        CGPoint translation = [myPan translationInView:self.superview];
+        CGPoint realPoint = translation;//CGPointMake((translation.x + self.lastLocation.x), (translation.y + self.lastLocation.y));
+        
+        CGRect bounds = self.bounds;
+        bounds.origin.x -= realPoint.x;
+        bounds.origin.y -= realPoint.y;
+        
+        BOOL isTooFarRight = bounds.origin.x < -self.contentSize.width;
+        BOOL isTooFarLeft = bounds.origin.x > self.contentSize.width;
+        BOOL isTooFarTop = bounds.origin.y > self.contentSize.height;
+        BOOL isTooFarDown = bounds.origin.y < -20;
+        
+        if (!isTooFarRight && !isTooFarLeft && !isTooFarTop && !isTooFarDown){
+            {
+                self.bounds = bounds;
+                [myPan setTranslation:CGPointZero inView:self.superview];
+                NSLog(@"Moving the location: (%f, %f)", realPoint.x, realPoint.y);
+                
+            }
+        }
     }
 }
 
