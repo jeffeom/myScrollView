@@ -25,7 +25,6 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-//    self.myView.frame = CGRectMake(0, -100, self.view.frame.size.width, self.view.frame.size.height);
     self.myView.bounds = CGRectMake(0, 100, self.view.frame.size.width, self.view.frame.size.height);
     
 }

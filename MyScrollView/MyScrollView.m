@@ -26,29 +26,24 @@
 
 -(void) move:(UIPanGestureRecognizer *)myPan{
     
-    if (myPan.state == UIGestureRecognizerStateBegan) {
-        self.lastLocation = self.bounds.origin;
-    } else {
-        
-        CGPoint translation = [myPan translationInView:self.superview];
-        CGPoint realPoint = translation;//CGPointMake((translation.x + self.lastLocation.x), (translation.y + self.lastLocation.y));
-        
-        CGRect bounds = self.bounds;
-        bounds.origin.x -= realPoint.x;
-        bounds.origin.y -= realPoint.y;
-        
-        BOOL isTooFarRight = bounds.origin.x < -self.contentSize.width;
-        BOOL isTooFarLeft = bounds.origin.x > self.contentSize.width;
-        BOOL isTooFarTop = bounds.origin.y > self.contentSize.height;
-        BOOL isTooFarDown = bounds.origin.y < -20;
-        
-        if (!isTooFarRight && !isTooFarLeft && !isTooFarTop && !isTooFarDown){
-            {
-                self.bounds = bounds;
-                [myPan setTranslation:CGPointZero inView:self.superview];
-                NSLog(@"Moving the location: (%f, %f)", realPoint.x, realPoint.y);
-                
-            }
+    CGPoint translation = [myPan translationInView:self.superview];
+    CGPoint realPoint = translation;//CGPointMake((translation.x + self.lastLocation.x), (translation.y + self.lastLocation.y));
+    
+    CGRect bounds = self.bounds;
+    bounds.origin.x -= realPoint.x;
+    bounds.origin.y -= realPoint.y;
+    
+    BOOL isTooFarRight = bounds.origin.x < -self.contentSize.width;
+    BOOL isTooFarLeft = bounds.origin.x > self.contentSize.width;
+    BOOL isTooFarTop = bounds.origin.y > self.contentSize.height;
+    BOOL isTooFarDown = bounds.origin.y < -20;
+    
+    if (!isTooFarRight && !isTooFarLeft && !isTooFarTop && !isTooFarDown){
+        {
+            self.bounds = bounds;
+            [myPan setTranslation:CGPointZero inView:self.superview];
+            NSLog(@"Moving to the location: (%f, %f)", realPoint.x, realPoint.y);
+            
         }
     }
 }
